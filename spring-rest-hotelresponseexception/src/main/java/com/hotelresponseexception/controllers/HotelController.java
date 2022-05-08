@@ -3,6 +3,9 @@ package com.hotelresponseexception.controllers;
 import com.hotelresponseexception.model.Hotel;
 import com.hotelresponseexception.service.IHotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,60 +22,90 @@ public class HotelController {
     }
 
     @PostMapping("/hotels")
-    public void addHotel(@RequestBody Hotel hotel){
+    public ResponseEntity<Void> addHotel(@RequestBody Hotel hotel){
         hotelService.addHotel(hotel);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/hotels")
-    public void updateHotel(@RequestBody Hotel hotel){
+    public ResponseEntity<Void> updateHotel(@RequestBody Hotel hotel){
         hotelService.updateHotel(hotel);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping("/hotels/id/{hotelId}")
-    public void deleteHotel(@PathVariable("hotelId")int hotelId){
+    public ResponseEntity<Void> deleteHotel(@PathVariable("hotelId")int hotelId){
         hotelService.deleteHotel(hotelId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/hotels/id/{hotelId}")
-    public Hotel showHotelById(@PathVariable("hotelId")int hotelId){
-        return hotelService.getHotelById(hotelId);
+    public ResponseEntity<Hotel> showHotelById(@PathVariable("hotelId")int hotelId){
+        Hotel hotel=hotelService.getHotelById(hotelId);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by Id"+hotelId);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotel);
     }
 
     @GetMapping("/hotels")
-    public List<Hotel> showAllHotels(){
-        return hotelService.getAllHotels();
+    public ResponseEntity<List<Hotel>> showAllHotels(){
+        List<Hotel> hotels=hotelService.getAllHotels();
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get all");
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/ratings/{ratings}/type/{type}")
-    public List<Hotel> showByRatingsAndType(@PathVariable("ratings")double ratings,@PathVariable("type")String type){
-        return hotelService.getHotelByRatingsAndType(ratings, type);
+    public ResponseEntity<List<Hotel>> showByRatingsAndType(@PathVariable("ratings")double ratings,@PathVariable("type")String type){
+       List<Hotel> hotels=hotelService.getHotelByRatingsAndType(ratings, type);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by ratings "+ratings+" and type "+type);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/city/{city}/distance/{distance}")
-    public List<Hotel> showByCityAndDistance(@PathVariable("city")String city,@PathVariable("distance")String distance){
-        return hotelService.getHotelByCityAndDistance(city,distance);
+    public ResponseEntity<List<Hotel>> showByCityAndDistance(@PathVariable("city")String city,@PathVariable("distance")String distance){
+        List<Hotel> hotels=hotelService.getHotelByCityAndDistance(city,distance);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by city "+city+" and distance "+distance);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/price/{price}")
-    public List<Hotel> showByLessPrice(@PathVariable("price") double price){
-        return hotelService.getByPriceLessThan(price);
+    public ResponseEntity<List<Hotel>> showByLessPrice(@PathVariable("price") double price){
+        List<Hotel> hotels=hotelService.getByPriceLessThan(price);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by price less than"+price);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/restaurantincluded/{restaurantincluded}")
-    public List<Hotel> showByRestaurantIncluded(@PathVariable("restaurantincluded")boolean restaurantIncluded){
-        return hotelService.getByRestaurantIncluded(restaurantIncluded);
+    public ResponseEntity<List<Hotel>> showByRestaurantIncluded(@PathVariable("restaurantincluded")boolean restaurantIncluded){
+        List<Hotel> hotels=hotelService.getByRestaurantIncluded(restaurantIncluded);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by restaurant included "+restaurantIncluded);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/propertytype/{propertytype}/totalnoofrooms/{totalnoofrooms}")
-    public List<Hotel> showByPropertyTypeAndTotalNoOfRooms(@PathVariable("propertytype")String propertyType,@PathVariable("totalnoofrooms")int totalNoOfRooms){
-        return hotelService.getByPropertyTypeAndTotalNoOfRooms(propertyType, totalNoOfRooms);
+    public ResponseEntity<List<Hotel>> showByPropertyTypeAndTotalNoOfRooms(@PathVariable("propertytype")String propertyType,@PathVariable("totalnoofrooms")int totalNoOfRooms){
+        List<Hotel> hotels=hotelService.getByPropertyTypeAndTotalNoOfRooms(propertyType, totalNoOfRooms);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by property type "+propertyType+" and total no of rooms "+totalNoOfRooms);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 
     @GetMapping("/hotels/checkindate/{checkindate}")
-    public List<Hotel> showByCheckinDateLessThan(@PathVariable("checkindate")String checkinDate){
-        return hotelService.getByCheckInDateLessThan(LocalDate.parse(checkinDate));
+    public ResponseEntity<List<Hotel>> showByCheckinDateLessThan(@PathVariable("checkindate")String checkinDate){
+        List<Hotel> hotels=hotelService.getByCheckInDateLessThan(LocalDate.parse(checkinDate));
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by checkin date "+checkinDate);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
     @GetMapping("/hotels/checkoutdate/{checkoutdate}")
-    public List<Hotel> showByCheckoutDateLessThan(@PathVariable("checkoutdate")LocalDate checkoutDate){
-        return hotelService.getByCheckOutDateLessThan(checkoutDate);
+    public ResponseEntity<List<Hotel>> showByCheckoutDateLessThan(@PathVariable("checkoutdate")LocalDate checkoutDate){
+        List<Hotel> hotels=hotelService.getByCheckOutDateLessThan(checkoutDate);
+        HttpHeaders httpheaders=new HttpHeaders();
+        httpheaders.add("desc","Get by checkout date "+checkoutDate);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpheaders).body(hotels);
     }
 }

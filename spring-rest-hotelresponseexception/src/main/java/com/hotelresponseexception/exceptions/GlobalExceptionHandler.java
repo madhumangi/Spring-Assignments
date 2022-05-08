@@ -80,9 +80,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(HotelIdNotFoundException.class)
     public ResponseEntity<Object> handleHotelIdNotFound(Exception ex){
         HttpHeaders headers=new HttpHeaders();
-        headers.add("desc","Camera Id Not Found");
+        headers.add("desc","HotelId Not Found");
         String error=ex.getMessage();
-        List<String> messages=Arrays.asList(error,"Camera Id not available");
+        List<String> messages=Arrays.asList(error,"Hotel Id not available");
         ApiErrors apiErrors=new ApiErrors(LocalDateTime.now(),HttpStatus.NOT_FOUND,HttpStatus.NOT_FOUND.value(),error,messages);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(apiErrors);
     }
